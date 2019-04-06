@@ -41,7 +41,7 @@ namespace WebApp.Controllers
                 TitleFilter = title,
                 JournalFilter = journal,
                 Journals = await journals.Distinct().ToListAsync(),
-                Entries = await entries.ToListAsync()
+                Entries = await entries.OrderByDescending(e => e.Journal).ThenBy(e=> e.Id).ToListAsync()
             };
             return View(model);
         }

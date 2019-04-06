@@ -13,6 +13,6 @@ namespace WebApp.Models
         {
         }
 
-        public DbSet<WebApp.Models.Entry> Entry { get; set; }
+        public new DbSet<WebApp.Models.Entry> Entry { get; set; }
     }
 }
