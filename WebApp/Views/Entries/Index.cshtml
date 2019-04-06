@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebApp.Models.Entry>
+﻿@model EntriesIndexViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -9,39 +9,60 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<form>
+    <select name="journal">
+        <option value="">All</option>
+        @foreach (var item in Model.Journals)
+        {
+            if (Model.JournalFilter != null && Model.JournalFilter.Equals(item))
+            {
+                <option selected>@Html.DisplayFor(model => item)</option>
+            }
+            else
+            {
+                <option>@Html.DisplayFor(model => item)</option>
+            }
+
+        }
+    </select>
+    <input type="text" name="title" value="@Html.DisplayFor(model => model.TitleFilter)" />
+    <button type="submit" method="get">Filter</button>
+</form>
+<br/>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Journal)
+                @Html.DisplayNameFor(model => model.Entries[0].Journal)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                @Html.DisplayNameFor(model => model.Entries[0].Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Pages)
+                @Html.DisplayNameFor(model => model.Entries[0].Pages)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Journal)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Pages)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Entries)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Journal)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Pages)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

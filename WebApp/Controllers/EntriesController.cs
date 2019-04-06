@@ -19,9 +19,31 @@ namespace WebApp.Controllers
         }
 
         // GET: Entries
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string title, string journal)
         {
-            return View(await _context.Entry.ToListAsync());
+            var entries = from e in _context.Entry
+                          select e;
+
+            if (!string.IsNullOrEmpty(title))
+            {
+                entries = entries.Where(x => x.Title.ToUpperInvariant().Contains(title.ToUpperInvariant()));
+            }
+            if (!string.IsNullOrEmpty(journal))
+            {
+                entries = entries.Where(x => x.Journal.Equals(journal));
+            }
+
+            var journals = from e in _context.Entry
+                           select e.Journal;
+
+            var model = new EntriesIndexViewModel
+            {
+                TitleFilter = title,
+                JournalFilter = journal,
+                Journals = await journals.Distinct().ToListAsync(),
+                Entries = await entries.ToListAsync()
+            };
+            return View(model);
         }
 
         // GET: Entries/Details/5
