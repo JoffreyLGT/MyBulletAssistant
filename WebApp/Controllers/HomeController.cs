@@ -12,7 +12,8 @@ namespace WebApp.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return Redirect("/entries");
+            //return View();
         }
 
         public IActionResult Privacy()
