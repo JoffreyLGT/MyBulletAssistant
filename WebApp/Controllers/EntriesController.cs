@@ -120,9 +120,8 @@ namespace WebApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Journal,Title,Pages")] Entry entry)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,Journal,Title,Pages")] Entry entry)
         {
-            // TODO Check if the ID related to the item to edit is owned by the currently connected user.
             if (id != entry.Id)
             {
                 return NotFound();
@@ -132,7 +131,11 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    _context.Update(entry);
+                    if (entry.UserId != _userManager.GetUserId(User))
+                    {
+                        return NotFound();
+                    }
+                    _context.Entry.Update(entry);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
