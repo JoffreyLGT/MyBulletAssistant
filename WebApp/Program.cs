@@ -28,7 +28,6 @@ namespace WebApp
                 {
                     var context = services.GetRequiredService<ApplicationDbContext>();
                     context.Database.Migrate();
-                    SeedData.Initialize(services);
                 }
                 catch (Exception ex)
                 {
