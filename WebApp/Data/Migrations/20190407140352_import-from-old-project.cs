@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace WebApp.Migrations
+namespace WebApp.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class importfromoldproject : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,9 +13,9 @@ namespace WebApp.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Journal = table.Column<string>(nullable: true),
-                    Title = table.Column<string>(nullable: true),
-                    Pages = table.Column<string>(nullable: true)
+                    Journal = table.Column<string>(nullable: false),
+                    Title = table.Column<string>(nullable: false),
+                    Pages = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {

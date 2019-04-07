@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApp.Data;
 
 namespace WebApp.Models
 {
@@ -11,9 +12,9 @@ namespace WebApp.Models
     {
         public static void Initialize(IServiceProvider serviceProvider)
         {
-            using (var context = new WebAppContext(
+            using (var context = new ApplicationDbContext(
                 serviceProvider.GetRequiredService<
-                    DbContextOptions<WebAppContext>>()))
+                    DbContextOptions<ApplicationDbContext>>()))
             {
                 // Look for any movies.
                 if (context.Entry.Any())
