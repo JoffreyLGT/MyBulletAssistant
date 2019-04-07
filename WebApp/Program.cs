@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using WebApp.Data;
 using WebApp.Models;
 
 namespace WebApp
@@ -25,7 +26,7 @@ namespace WebApp
 
                 try
                 {
-                    var context = services.GetRequiredService<WebAppContext>();
+                    var context = services.GetRequiredService<ApplicationDbContext>();
                     context.Database.Migrate();
                     SeedData.Initialize(services);
                 }
