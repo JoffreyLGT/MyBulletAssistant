@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Data;
 using WebApp.Models;
@@ -41,6 +39,8 @@ namespace WebApp.Controllers
             {
                 entries = entries.Where(x => x.Journal.Equals(journal));
             }
+            var sortedEntries = await entries.ToListAsync();
+            sortedEntries.Sort(new EntryComparer());
 
             var journals = from e in _context.Entry
                            where e.UserId == _userManager.GetUserId(User)
@@ -50,8 +50,8 @@ namespace WebApp.Controllers
             {
                 TitleFilter = title,
                 JournalFilter = journal,
-                Journals = await journals.Distinct().ToListAsync(),
-                Entries = await entries.OrderByDescending(e => e.Journal).ThenBy(e => e.Id).ToListAsync()
+                Journals = await journals.Distinct().OrderByDescending(j => j).ToListAsync(),
+                Entries = sortedEntries
             };
             return View(viewModel);
         }
