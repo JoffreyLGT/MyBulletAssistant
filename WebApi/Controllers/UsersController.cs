@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -6,11 +7,13 @@ using System;
 using System.Threading.Tasks;
 using WebApi.Data;
 using WebApi.Data.Entities;
+using WebApi.Utilities;
 
 namespace WebApi.Controllers
 {
     [Route("/api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IMbaRepository repository;
@@ -29,6 +32,10 @@ namespace WebApi.Controllers
         {
             try
             {
+                if (!HttpContext.User.CompareIdWithTokenId(id))
+                {
+                    return Unauthorized();
+                }
                 var user = await repository.GetUserById(id, includeEntries);
                 if (user == null)
                 {
@@ -38,7 +45,7 @@ namespace WebApi.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Server error");
             }
         }
 

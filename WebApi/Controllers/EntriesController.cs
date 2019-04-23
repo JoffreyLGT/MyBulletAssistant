@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -11,6 +12,7 @@ namespace WebApi.Controllers
 {
     [Route("/api/users/{userId}/[controller]")]
     [ApiController]
+    [Authorize]
     public class EntriesController : ControllerBase
     {
         private readonly IMbaRepository repository;
