@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApi.Data.Entities
 {
-    public class User
+    public class User : IdentityUser
     {
-        public string Id { get; set; }
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
         public ICollection<Entry> Entries { get; set; }
     }
 }

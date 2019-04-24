@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WebApi.Data;
+using WebApi.Data.Entities;
 
 namespace WebApi
 {
@@ -27,6 +29,9 @@ namespace WebApi
             services.AddDbContext<MbaContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MbaContext")));
             services.AddScoped<IMbaRepository, MbaRepository>();
             services.AddAutoMapper();
+
+            services.AddDefaultIdentity<User>()
+                .AddEntityFrameworkStores<MbaContext>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -59,6 +64,8 @@ namespace WebApi
                 app.UseHsts();
             }
             app.UseAuthentication();
+            app.UseStaticFiles();
+
             app.UseHttpsRedirection();
             app.UseMvc();
         }

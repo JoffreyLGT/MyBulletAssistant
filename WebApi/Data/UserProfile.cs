@@ -10,7 +10,9 @@ namespace WebApi.Data
         {
             this.CreateMap<User, User>();
             this.CreateMap<Entry, Entry>();
-            this.CreateMap<User, UserModel>().ReverseMap();
+            this.CreateMap<User, UserModel>()
+                .ReverseMap();
+            this.CreateMap<Entry, EntryModel>();
         }
     }
 }

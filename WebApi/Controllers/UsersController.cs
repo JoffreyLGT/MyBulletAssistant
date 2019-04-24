@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using WebApi.Data;
 using WebApi.Data.Entities;
@@ -12,23 +15,26 @@ using WebApi.Utilities;
 namespace WebApi.Controllers
 {
     [Route("/api/[controller]")]
-    [ApiController]
     [Authorize]
+    [ApiController]
     public class UsersController : ControllerBase
     {
         private readonly IMbaRepository repository;
         private readonly IMapper mapper;
         private readonly LinkGenerator linkGenerator;
+        private readonly UserManager<User> userManager;
 
-        public UsersController(IMbaRepository repository, IMapper mapper, LinkGenerator linkGenerator)
+
+        public UsersController(IMbaRepository repository, IMapper mapper, LinkGenerator linkGenerator, UserManager<User> userManager)
         {
             this.repository = repository;
             this.mapper = mapper;
             this.linkGenerator = linkGenerator;
+            this.userManager = userManager;
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> Get(string id, bool includeEntries = false)
+        public async Task<ActionResult<UserModel>> Get(string id, bool includeEntries = false)
         {
             try
             {
@@ -41,7 +47,7 @@ namespace WebApi.Controllers
                 {
                     return BadRequest("The user doesn't exist.");
                 }
-                return Ok(user);
+                return Ok(mapper.Map<User, UserModel>(user));
             }
             catch (Exception)
             {
@@ -50,33 +56,30 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> Post(User user)
+        public async Task<IActionResult> Post(LoginModel login)
         {
-            try
+            var result = await userManager.CreateAsync(new User { UserName = login.Email, Email = login.Email }, login.Password);
+            if (result.Succeeded)
             {
-                var existing = await repository.GetUserByEmail(user.Email);
-                if (existing != null)
+                var user = await repository.GetUserByEmail(login.Email);
+                return Ok(mapper.Map<User, UserModel>(user));
+            }
+            StringBuilder jsonErrors = new StringBuilder();
+            foreach (var error in result.Errors)
+            {
+                if (jsonErrors.Length != 0)
                 {
-                    return BadRequest("Email already used.");
+                    jsonErrors.Append(",");
                 }
+                jsonErrors.Append($"\"{error.Description}\"");
+            }
 
-                user.Id = null; // The DB creates the id, not the user.
-                repository.Add(user);
-                if (await repository.SaveChangesAsync())
-                {
-                    var link = linkGenerator.GetPathByAction("Get", "Users", new { id = user.Id });
-                    return Created(link, user);
-                }
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
-            }
-            return BadRequest();
+            return BadRequest($"{{\"errors\":[{jsonErrors.ToString()}]}}");
+
         }
 
         [HttpPut("{userId}")]
-        public async Task<ActionResult<User>> Put(string userId, User user)
+        public async Task<ActionResult<UserModel>> Put(string userId, User user)
         {
             try
             {
@@ -97,9 +100,9 @@ namespace WebApi.Controllers
                 if (await repository.SaveChangesAsync())
                 {
                     var link = linkGenerator.GetPathByAction("Get", "Users", new { id = user.Id });
-                    return Accepted(link, user);
+                    return Accepted(link, mapper.Map<User, UserModel>(user));
                 }
-                return StatusCode(StatusCodes.Status304NotModified, user);
+                return StatusCode(StatusCodes.Status304NotModified, mapper.Map<User, UserModel>(user));
 
             }
             catch (Exception)
@@ -125,7 +128,7 @@ namespace WebApi.Controllers
                 {
                     return Ok();
                 }
-                return StatusCode(StatusCodes.Status304NotModified, user);
+                return StatusCode(StatusCodes.Status304NotModified);
             }
             catch (Exception)
             {

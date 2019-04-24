@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -18,12 +19,14 @@ namespace WebApi.Controllers
     public class TokenController : ControllerBase
     {
         private IConfiguration config;
+        private readonly SignInManager<User> signInManager;
         private readonly IMbaRepository repository;
         private readonly IMapper mapper;
 
-        public TokenController(IMbaRepository repository, IMapper mapper, IConfiguration config)
+        public TokenController(IMbaRepository repository, IMapper mapper, IConfiguration config, SignInManager<User> signInManager)
         {
             this.config = config;
+            this.signInManager = signInManager;
             this.repository = repository;
             this.mapper = mapper;
         }
@@ -65,14 +68,16 @@ namespace WebApi.Controllers
 
         private async Task<UserModel> Authenticate(LoginModel login)
         {
-            var user = await repository.GetUserByEmail(login.Email);
-            if (user == null)
+            var result = await signInManager.PasswordSignInAsync(login.Email, login.Password, true, lockoutOnFailure: false);
+            if (result.Succeeded)
             {
-                return null;
+                var user = await repository.GetUserByEmail(login.Email);
+                if (user != null)
+                {
+                    return mapper.Map<User, UserModel>(user);
+                }
             }
-            return mapper.Map<User, UserModel>(user);
+            return null;
         }
-
-
     }
 }

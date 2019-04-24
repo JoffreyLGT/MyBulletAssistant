@@ -11,8 +11,8 @@ using WebApi.Data.Entities;
 namespace WebApi.Controllers
 {
     [Route("/api/users/{userId}/[controller]")]
-    [ApiController]
     [Authorize]
+    [ApiController]
     public class EntriesController : ControllerBase
     {
         private readonly IMbaRepository repository;
