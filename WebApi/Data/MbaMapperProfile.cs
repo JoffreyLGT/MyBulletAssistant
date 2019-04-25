@@ -8,12 +8,22 @@ namespace WebApi.Data
     {
         public MbaMapperProfile()
         {
-            this.CreateMap<User, User>()
-                .ForMember(m => m.Id, id => id.Ignore());
-            this.CreateMap<Entry, Entry>();
-            this.CreateMap<User, UserModel>()
+            CreateMap<User, User>()
+                .ForMember(u => u.Id, id => id.Ignore());
+
+            CreateMap<Entry, Entry>()
+                .ForMember(e => e.Id, id => id.Ignore());
+
+            CreateMap<User, UserModel>()
                 .ReverseMap();
-            this.CreateMap<Entry, EntryModel>();
+
+            CreateMap<Entry, EntryModel>()
+                .ReverseMap();
+
+            CreateMap<User, LoginModel>()
+                .ForMember(lm=>lm.Password, o=>o.MapFrom(u=>u.PasswordHash))
+                .ReverseMap();
+
         }
     }
 }
