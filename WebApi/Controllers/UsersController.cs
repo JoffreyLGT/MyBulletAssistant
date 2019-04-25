@@ -24,7 +24,6 @@ namespace WebApi.Controllers
         private readonly LinkGenerator linkGenerator;
         private readonly UserManager<User> userManager;
 
-
         public UsersController(IMbaRepository repository, IMapper mapper, LinkGenerator linkGenerator, UserManager<User> userManager)
         {
             this.repository = repository;
@@ -56,6 +55,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Post(LoginModel login)
         {
             var result = await userManager.CreateAsync(new User { UserName = login.Email, Email = login.Email }, login.Password);
@@ -78,24 +78,35 @@ namespace WebApi.Controllers
 
         }
 
-        [HttpPut("{userId}")]
-        public async Task<ActionResult<UserModel>> Put(string userId, User user)
+        [HttpPut("{id}")]
+        public async Task<ActionResult<UserModel>> Put(string id, User user)
         {
             try
             {
-                var existing = await repository.GetUserById(userId);
-                if (existing == null)
+                if (!HttpContext.User.CompareIdWithTokenId(id))
+                {
+                    return Unauthorized();
+                }
+                var userFromId = await repository.GetUserById(id);
+                if (userFromId == null)
                 {
                     return BadRequest("User not found.");
                 }
 
-                var userWithEmail = await repository.GetUserByEmail(user.Email);
-                if (userWithEmail != null && !existing.Id.Equals(userWithEmail?.Id))
+                var userFromEmail = await repository.GetUserByEmail(user.Email);
+                if (userFromEmail != null)
                 {
-                    return BadRequest("Email already used.");
+                    if (userFromId.Id.Equals(userFromEmail.Id))
+                    {
+                        return StatusCode(StatusCodes.Status304NotModified);
+                    }
+                    else
+                    {
+                        BadRequest("Email already used.");
+                    }
                 }
 
-                mapper.Map(user, existing);
+                mapper.Map(user, userFromId);
 
                 if (await repository.SaveChangesAsync())
                 {
@@ -103,20 +114,23 @@ namespace WebApi.Controllers
                     return Accepted(link, mapper.Map<User, UserModel>(user));
                 }
                 return StatusCode(StatusCodes.Status304NotModified, mapper.Map<User, UserModel>(user));
-
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
-        [HttpDelete("{userId}")]
-        public async Task<IActionResult> Delete(string userId)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
         {
             try
             {
-                var user = await repository.GetUserById(userId, true);
+                if (!HttpContext.User.CompareIdWithTokenId(id))
+                {
+                    return Unauthorized();
+                }
+                var user = await repository.GetUserById(id, true);
                 if (user == null)
                 {
                     return BadRequest("User not found.");

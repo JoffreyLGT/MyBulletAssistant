@@ -40,7 +40,7 @@ namespace WebApi.Controllers
             if (user != null)
             {
                 var tokenString = BuildToken(user);
-                return Ok(new { token = tokenString });
+                return Ok(new { user.Id, token = tokenString });
             }
 
             return Unauthorized();

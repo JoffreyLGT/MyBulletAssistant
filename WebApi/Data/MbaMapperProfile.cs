@@ -4,11 +4,12 @@ using WebApi.Data.Entities;
 
 namespace WebApi.Data
 {
-    public class UserProfile : Profile
+    public class MbaMapperProfile : Profile
     {
-        public UserProfile()
+        public MbaMapperProfile()
         {
-            this.CreateMap<User, User>();
+            this.CreateMap<User, User>()
+                .ForMember(m => m.Id, id => id.Ignore());
             this.CreateMap<Entry, Entry>();
             this.CreateMap<User, UserModel>()
                 .ReverseMap();
