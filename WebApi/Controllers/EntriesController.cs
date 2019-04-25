@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using WebApi.Data;
 using WebApi.Data.Entities;
+using WebApi.Utilities;
 
 namespace WebApi.Controllers
 {
@@ -31,6 +32,10 @@ namespace WebApi.Controllers
         {
             try
             {
+                if (!HttpContext.User.CompareIdWithTokenId(userId))
+                {
+                    return Unauthorized();
+                }
                 var user = await repository.GetUserById(userId, true);
                 if (user == null)
                 {
@@ -50,6 +55,10 @@ namespace WebApi.Controllers
         {
             try
             {
+                if (!HttpContext.User.CompareIdWithTokenId(userId))
+                {
+                    return Unauthorized();
+                }
                 var entry = await repository.GetEntry(userId, entryId);
                 if (entry == null)
                 {
@@ -68,6 +77,10 @@ namespace WebApi.Controllers
         {
             try
             {
+                if (!HttpContext.User.CompareIdWithTokenId(userId))
+                {
+                    return Unauthorized();
+                }
                 var user = await repository.GetUserById(userId, true);
                 if (user == null)
                 {
@@ -93,6 +106,10 @@ namespace WebApi.Controllers
         {
             try
             {
+                if (!HttpContext.User.CompareIdWithTokenId(userId))
+                {
+                    return Unauthorized();
+                }
                 var dbEntry = await repository.GetEntry(userId, entryId);
                 if (dbEntry == null)
                 {
@@ -120,6 +137,10 @@ namespace WebApi.Controllers
         {
             try
             {
+                if (!HttpContext.User.CompareIdWithTokenId(userId))
+                {
+                    return Unauthorized();
+                }
                 var entry = await repository.GetEntry(userId, entryId);
                 if (entry == null)
                 {
