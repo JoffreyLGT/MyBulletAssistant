@@ -62,14 +62,10 @@ namespace WebApi.Controllers
             if (userCreation.Succeeded)
             {
                 var user = await repository.GetUserByEmail(login.Email);
-                mapper.Map(mapper.Map<LoginModel, User>(login), user);
-                if (await repository.SaveChangesAsync())
-                {
-                    return Ok(mapper.Map<User, UserModel>(user));
-                }
-                repository.Delete(user);
-                await repository.SaveChangesAsync();
-                return BadRequest();
+
+                await userManager.AddPasswordAsync(user, login.Password);
+                await userManager.UpdateAsync(user);
+                return Ok(mapper.Map<User, UserModel>(user));
             }
             StringBuilder jsonErrors = new StringBuilder();
             foreach (var error in userCreation.Errors)
