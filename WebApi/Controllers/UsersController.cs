@@ -58,13 +58,10 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Post(LoginModel login)
         {
-            var userCreation = await userManager.CreateAsync(new User { UserName = login.Email, Email = login.Email });
+            var userCreation = await userManager.CreateAsync(new User { UserName = login.Email, Email = login.Email }, login.Password);
             if (userCreation.Succeeded)
             {
                 var user = await repository.GetUserByEmail(login.Email);
-
-                await userManager.AddPasswordAsync(user, login.Password);
-                await userManager.UpdateAsync(user);
                 return Ok(mapper.Map<User, UserModel>(user));
             }
             StringBuilder jsonErrors = new StringBuilder();
@@ -82,7 +79,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<UserModel>> Put(string id, User user)
+        public async Task<ActionResult<UserModel>> Put(string id, User user, bool includeEntries = false)
         {
             try
             {
@@ -97,22 +94,16 @@ namespace WebApi.Controllers
                 }
 
                 var userFromEmail = await repository.GetUserByEmail(user.Email);
-                if (userFromEmail != null)
+                if (userFromEmail != null && !userFromId.Id.Equals(userFromEmail?.Id))
                 {
-                    if (userFromId.Id.Equals(userFromEmail.Id))
-                    {
-                        return StatusCode(StatusCodes.Status304NotModified);
-                    }
-                    else
-                    {
-                        BadRequest("Email already used.");
-                    }
+                    BadRequest("Email already used.");
                 }
 
                 mapper.Map(user, userFromId);
 
                 if (await repository.SaveChangesAsync())
                 {
+                    user = await repository.GetUserById(id, includeEntries);
                     var link = linkGenerator.GetPathByAction("Get", "Users", new { id = user.Id });
                     return Accepted(link, mapper.Map<User, UserModel>(user));
                 }

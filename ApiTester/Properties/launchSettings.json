@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ApiTester": {
+      "commandName": "Project",
+      "commandLineArgs": "\"https://localhost:44370/\""
+    }
+  }
+}
