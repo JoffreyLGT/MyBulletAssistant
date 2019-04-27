@@ -58,13 +58,10 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Post(LoginModel login)
         {
-            var userCreation = await userManager.CreateAsync(new User { UserName = login.Email, Email = login.Email });
+            var userCreation = await userManager.CreateAsync(new User { UserName = login.Email, Email = login.Email }, login.Password);
             if (userCreation.Succeeded)
             {
                 var user = await repository.GetUserByEmail(login.Email);
-
-                await userManager.AddPasswordAsync(user, login.Password);
-                await userManager.UpdateAsync(user);
                 return Ok(mapper.Map<User, UserModel>(user));
             }
             StringBuilder jsonErrors = new StringBuilder();
