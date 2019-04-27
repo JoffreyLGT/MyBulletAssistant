@@ -181,7 +181,7 @@ namespace Core.Data
         public async Task<(bool, string)> DeleteEntry(int id)
         {
             var uri = $"/api/users/{userId}/entries/{id}";
-            (string content, bool isSuccess) = await ExecuteRequest(RequestType.Delete, uri,"");
+            (string content, bool isSuccess) = await ExecuteRequest(RequestType.Delete, uri, "");
             if (!isSuccess)
             {
                 return (false, content);
