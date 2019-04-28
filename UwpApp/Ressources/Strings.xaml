@@ -1,0 +1,12 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UwpApp.Ressources">
+    <x:String x:Key="applicationName">My Bullet Assistant</x:String>
+    <x:String x:Key="loginPage_emailLabel">Email</x:String>
+    <x:String x:Key="loginPage_errorEmail">Invalid email ; please edit it and try again.</x:String>
+    <x:String x:Key="loginPage_passwordLabel">Password</x:String>
+    <x:String x:Key="loginPage_errorPassword">Invalid password ; it should contains at least one char uppercased, one lowercased, a symbol and a number.</x:String>
+    <x:String x:Key="loginPage_wrongCredentials">Wrong credentials, please retry.</x:String>
+
+</ResourceDictionary>
