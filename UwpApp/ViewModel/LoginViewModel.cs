@@ -78,6 +78,11 @@ namespace UwpApp.ViewModel
         public LoginViewModel()
         {
             client = new MbaApiClient(new Uri("http://localhost:58665/"));
+#if AUTOLOGIN
+            Email = "joff@test.fr";
+            Password = "Hello_world1";
+            Login();
+#endif
         }
 
 

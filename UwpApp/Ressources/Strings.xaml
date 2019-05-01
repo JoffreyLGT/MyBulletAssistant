@@ -8,5 +8,7 @@
     <x:String x:Key="loginPage_passwordLabel">Password</x:String>
     <x:String x:Key="loginPage_errorPassword">Invalid password ; it should contains at least one char uppercased, one lowercased, a symbol and a number.</x:String>
     <x:String x:Key="loginPage_wrongCredentials">Wrong credentials, please retry.</x:String>
-
+    <x:String x:Key="version">Version 0.1</x:String>
+    <x:String x:Key="btnAddEntry">Add entry</x:String>
+    <x:String x:Key="btnDeleteEntry">Delete entry</x:String>
 </ResourceDictionary>

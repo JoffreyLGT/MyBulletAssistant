@@ -1,9 +1,12 @@
 ﻿using Core.Data;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using UwpApp.Models;
+using UwpApp.ViewModel;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -23,16 +26,25 @@ namespace UwpApp
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private MbaApiClient client;
+        private MainViewModel viewModel;
         public MainPage()
         {
             this.InitializeComponent();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            this.client = (MbaApiClient) e.Parameter;
+            if (viewModel == null)
+            {
+                viewModel = new MainViewModel((MbaApiClient)e.Parameter);
+            }
+            await viewModel.LoadEntries();
+        }
+
+        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            viewModel.SelectedEntry = e.AddedItems.First() as GridEntry;
         }
     }
 }
