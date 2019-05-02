@@ -1,12 +1,16 @@
 ﻿using Core.Data;
 using Core.Models;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using UwpApp.Base;
 using UwpApp.Models;
 using Windows.UI.Popups;
+using Windows.UI.Xaml.Controls;
 
 namespace UwpApp.ViewModel
 {
@@ -14,7 +18,20 @@ namespace UwpApp.ViewModel
     {
         private readonly MbaApiClient client;
         private ObservableCollection<GridEntry> entries;
+        private ObservableCollection<GridEntry> originalEntries;
         private GridEntry selectedEntry;
+        private string filterValue;
+
+        public string FilterValue
+        {
+            get => filterValue;
+            set
+            {
+                filterValue = value;
+                FilterEntries();
+                OnPropertyChanged();
+            }
+        }
 
         public GridEntry SelectedEntry
         {
@@ -31,6 +48,17 @@ namespace UwpApp.ViewModel
             set
             {
                 this.entries = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<GridEntry> OriginalEntries
+        {
+            get => originalEntries;
+            set
+            {
+                this.originalEntries = value;
+                Entries = value;
                 OnPropertyChanged();
             }
         }
@@ -55,7 +83,7 @@ namespace UwpApp.ViewModel
                 gridEntry.OnChange += UpdateEntry;
                 entries.Add(gridEntry);
             }
-            Entries = entries;
+            OriginalEntries = entries;
         }
 
         public async void UpdateEntry(object sender, EventArgs e)
@@ -81,6 +109,7 @@ namespace UwpApp.ViewModel
                 await dialog.ShowAsync();
                 return;
             }
+            OriginalEntries.Add(new GridEntry(entry));
             Entries.Add(new GridEntry(entry));
         }
 
@@ -98,7 +127,21 @@ namespace UwpApp.ViewModel
                 await dialog.ShowAsync();
                 return;
             }
+            OriginalEntries.Remove(selectedEntry);
             Entries.Remove(selectedEntry);
+        }
+
+        public void FilterEntries()
+        {
+            if (string.IsNullOrWhiteSpace(FilterValue))
+            {
+                Entries = OriginalEntries;
+                return;
+            }
+            var rqtFilter = from entry in OriginalEntries
+                            where entry.ToString().ToUpperInvariant().Contains(FilterValue.ToUpperInvariant())
+                            select entry;
+            Entries = new ObservableCollection<GridEntry>(rqtFilter);
         }
     }
 }

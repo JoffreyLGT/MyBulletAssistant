@@ -44,7 +44,20 @@ namespace UwpApp
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            viewModel.SelectedEntry = e.AddedItems.First() as GridEntry;
+            if (e.AddedItems.Count > 0)
+            {
+                viewModel.SelectedEntry = e.AddedItems.First() as GridEntry;
+            }
+        }
+
+        private void TextBox_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            var textBox = sender as TextBox;
+            if (e.Key == Windows.System.VirtualKey.Enter
+                || textBox.Text.Length == 0)
+            {
+                viewModel.FilterValue = textBox.Text;
+            }
         }
     }
 }

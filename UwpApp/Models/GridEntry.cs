@@ -71,5 +71,10 @@ namespace UwpApp.Models
         {
             return new EntryModel { Id = id, Journal = journal, Pages = pages, Title = title };
         }
+
+        public override string ToString()
+        {
+            return $"{id} {journal} {title} {pages}";
+        }
     }
 }

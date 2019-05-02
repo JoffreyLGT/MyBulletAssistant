@@ -6,12 +6,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls">
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    d:DesignWidth="600"
+    d:DesignHeight="600">
 
     <Grid x:Name="root" 
           Background="#FFFDF0"
           Padding="10">
-    <Grid.RowDefinitions>
+        <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition />
             <RowDefinition Height="auto" />
@@ -24,7 +26,7 @@
             <Image Source="Images/login-icon.png" 
                     Width="70" Height="70"
                     Margin="5"/>
-                <TextBlock 
+            <TextBlock 
                     Text="{StaticResource applicationName}"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
@@ -55,6 +57,7 @@
                         <TextBlock Margin="5 0 0 0"  Text="{StaticResource btnDeleteEntry}" />
                     </StackPanel>
                 </Button>
+                <TextBox Margin="10 0"  MinWidth="200" KeyUp="TextBox_KeyUp" Text="{x:Bind viewModel.FilterValue, Mode=TwoWay}" />
             </StackPanel>
             <controls:DataGrid 
                 Grid.Row="1"
@@ -63,22 +66,22 @@
                 BorderThickness="1"
                 x:Name="dataGrid"
                 VerticalAlignment="Stretch"
-            AutoGenerateColumns="False"
-            CanUserSortColumns="True"
-            ItemsSource="{x:Bind viewModel.Entries, Mode=OneWay}" SelectionChanged="DataGrid_SelectionChanged">
+                AutoGenerateColumns="False"
+                CanUserSortColumns="True"
+                ItemsSource="{x:Bind viewModel.Entries, Mode=OneWay}" SelectionChanged="DataGrid_SelectionChanged">
                 <controls:DataGrid.Columns>
                     <controls:DataGridTextColumn 
-                    Header="Journal" 
-                    Width="Auto"
-                    Binding="{Binding Journal}" />
+                        Header="Journal" 
+                        Width="Auto"
+                        Binding="{Binding Journal}" />
                     <controls:DataGridTextColumn 
-                    Header="Title" 
-                    Width="Auto"
-                    Binding="{Binding Title}" />
+                        Header="Title" 
+                        Width="Auto"
+                        Binding="{Binding Title}" />
                     <controls:DataGridTextColumn 
-                    Header="Pages" 
-                    Width="Auto"
-                    Binding="{Binding Pages}" />
+                        Header="Pages" 
+                        Width="Auto"
+                        Binding="{Binding Pages}" />
                 </controls:DataGrid.Columns>
             </controls:DataGrid>
         </Grid>
