@@ -1,15 +1,11 @@
 ﻿using Core.Data;
 using Core.Models;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using UwpApp.Base;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.Security.Credentials;
 
 namespace UwpApp.ViewModel
 {
@@ -78,16 +74,37 @@ namespace UwpApp.ViewModel
         public LoginViewModel()
         {
             client = new MbaApiClient(new Uri("http://localhost:58665/"));
-#if AUTOLOGIN
-            Email = "joff@test.fr";
-            Password = "Hello_world1";
-            Login();
-#endif
+
+            var loginCredential = GetCredentialFromLocker();
+            if (loginCredential != null)
+            {
+                loginCredential.RetrievePassword();
+                Email = loginCredential.UserName;
+                Password = loginCredential.Password;
+                Login();
+            }
         }
 
+        private PasswordCredential GetCredentialFromLocker()
+        {
+            PasswordCredential credential = null;
+
+            var vault = new PasswordVault();
+            try
+            {
+                var credentialList = vault.FindAllByResource("My Bullet Assistant");
+                if (credentialList.Count > 0)
+                {
+                    credential = credentialList[0];
+                }
+            }
+            catch (Exception) { }
+
+            return credential;
+        }
 
         public async void Login()
-        { 
+        {
             // Check the user inputs
             InvalidEmail = string.IsNullOrWhiteSpace(email) || !Regex.IsMatch(email, @"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*");
             InvalidPassword = string.IsNullOrWhiteSpace(password) || !Regex.IsMatch(password, @"((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\w]).{6,20})");
@@ -104,6 +121,11 @@ namespace UwpApp.ViewModel
                 HasAuthenticationFailed = true;
                 return;
             }
+
+            var vault = new PasswordVault();
+            vault.Add(new PasswordCredential(
+                "My Bullet Assistant", email, password));
+
             Frame rootFrame = Window.Current.Content as Frame;
             rootFrame.Navigate(typeof(MainPage), client);
         }

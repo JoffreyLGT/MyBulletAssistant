@@ -18,20 +18,42 @@
             <RowDefinition />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <StackPanel
-            Grid.Row="0"
-            Orientation="Horizontal"
-            Width="{x:Bind root.Width, Mode=OneWay}"
-            HorizontalAlignment="Stretch">
-            <Image Source="Images/login-icon.png" 
-                    Width="70" Height="70"
-                    Margin="5"/>
+        <Grid 
+            Margin="5"
+            Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Image 
+                Grid.Column="0"
+                Source="Images/login-icon.png" 
+                Width="70" Height="70" />
             <TextBlock 
-                    Text="{StaticResource applicationName}"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    FontSize="20" FontFamily="Segoe Print"/>
-        </StackPanel>
+                Grid.Column="1"
+                Margin="5 0"
+                Text="{StaticResource applicationName}"
+                VerticalAlignment="Center"
+                HorizontalAlignment="left"
+                FontSize="20" FontFamily="Segoe Print"/>
+            <Button
+                Grid.Column="2"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Background="Transparent"
+                Click="{x:Bind viewModel.Logout}">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock
+                        TextAlignment="Center"
+                        Text="{x:Bind viewModel.UserName, Mode=OneWay}" />
+                    <TextBlock 
+                        TextAlignment="Center"
+                        Text="{StaticResource loginPage_logoutLabel}" />
+                </StackPanel>
+            </Button>
+        </Grid>
         <Grid
             Grid.Row="1">
             <Grid.RowDefinitions>

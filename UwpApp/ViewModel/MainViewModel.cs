@@ -1,16 +1,14 @@
 ﻿using Core.Data;
 using Core.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using UwpApp.Base;
 using UwpApp.Models;
+using Windows.Security.Credentials;
 using Windows.UI.Popups;
-using Windows.UI.Xaml.Controls;
 
 namespace UwpApp.ViewModel
 {
@@ -21,6 +19,19 @@ namespace UwpApp.ViewModel
         private ObservableCollection<GridEntry> originalEntries;
         private GridEntry selectedEntry;
         private string filterValue;
+        private string userName;
+
+        public string UserName
+        {
+            get { return userName; }
+            set
+            {
+                userName = value;
+                OnPropertyChanged();
+            }
+        }
+
+
 
         public string FilterValue
         {
@@ -69,20 +80,21 @@ namespace UwpApp.ViewModel
 
         public async Task LoadEntries()
         {
-            (EntryModel[] dbEntries, string error) = await client.GetEntries();
+            (UserModel user, string error) = await client.GetUser(true);
             if (!string.IsNullOrEmpty(error))
             {
                 Debug.WriteLine("An error occured while fetching the user's entries.");
                 return;
             }
             ObservableCollection<GridEntry> entries = new ObservableCollection<GridEntry>();
-            foreach (var entry in dbEntries)
+            foreach (var entry in user.Entries)
             {
                 GridEntry gridEntry = new GridEntry(entry);
                 gridEntry.OnChange += UpdateEntry;
                 entries.Add(gridEntry);
             }
             OriginalEntries = entries;
+            UserName = user.Email;
         }
 
         public async void UpdateEntry(object sender, EventArgs e)
@@ -141,6 +153,13 @@ namespace UwpApp.ViewModel
                             where entry.ToString().ToUpperInvariant().Contains(FilterValue.ToUpperInvariant())
                             select entry;
             Entries = new ObservableCollection<GridEntry>(rqtFilter);
+        }
+
+        public void Logout()
+        {
+            var vault = new PasswordVault();
+            vault.Remove(vault.FindAllByResource("My Bullet Assistant")[0]);
+            Environment.Exit(0);
         }
     }
 }

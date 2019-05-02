@@ -11,4 +11,6 @@
     <x:String x:Key="version">Version 0.1</x:String>
     <x:String x:Key="btnAddEntry">Add entry</x:String>
     <x:String x:Key="btnDeleteEntry">Delete entry</x:String>
+    <x:String x:Key="loginPage_logoutLabel">Logout</x:String>
+    
 </ResourceDictionary>
