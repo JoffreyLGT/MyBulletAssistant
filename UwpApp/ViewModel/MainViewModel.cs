@@ -28,7 +28,6 @@ namespace UwpApp.ViewModel
             set
             {
                 filterValue = value;
-                FilterEntries();
                 OnPropertyChanged();
             }
         }

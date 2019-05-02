@@ -50,13 +50,13 @@ namespace UwpApp
             }
         }
 
-        private void TextBox_KeyUp(object sender, KeyRoutedEventArgs e)
+        private void AutoSuggestBox_KeyUp(object sender, KeyRoutedEventArgs e)
         {
-            var textBox = sender as TextBox;
+            var autoSuggestBox = sender as AutoSuggestBox;
             if (e.Key == Windows.System.VirtualKey.Enter
-                || textBox.Text.Length == 0)
+                || autoSuggestBox.Text.Length == 0)
             {
-                viewModel.FilterValue = textBox.Text;
+                viewModel.FilterEntries();
             }
         }
     }

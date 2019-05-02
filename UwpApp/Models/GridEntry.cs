@@ -74,7 +74,7 @@ namespace UwpApp.Models
 
         public override string ToString()
         {
-            return $"{id} {journal} {title} {pages}";
+            return $"{journal} {title} {pages}";
         }
     }
 }
