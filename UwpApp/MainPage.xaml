@@ -38,21 +38,20 @@
                 VerticalAlignment="Center"
                 HorizontalAlignment="left"
                 FontSize="20" FontFamily="Segoe Print"/>
-            <Button
-                Grid.Column="2"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                Background="Transparent"
-                Click="{x:Bind viewModel.Logout}">
-                <StackPanel Orientation="Vertical">
-                    <TextBlock
-                        TextAlignment="Center"
-                        Text="{x:Bind viewModel.UserName, Mode=OneWay}" />
-                    <TextBlock 
-                        TextAlignment="Center"
-                        Text="{StaticResource loginPage_logoutLabel}" />
-                </StackPanel>
-            </Button>
+            <StackPanel Orientation="Vertical"
+                        VerticalAlignment="Bottom"
+                Grid.Column="2">
+                <TextBlock
+                    TextAlignment="Center"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Text="{x:Bind viewModel.UserName, Mode=OneWay}" />
+                <HyperlinkButton        
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Content="{StaticResource loginPage_logoutLabel}"
+                    Click="{x:Bind viewModel.Logout}" />
+            </StackPanel>
         </Grid>
         <Grid
             Grid.Row="1">
