@@ -1,10 +1,12 @@
 ﻿using Core.Data;
 using System.Linq;
 using UwpApp.Models;
+using UwpApp.Startup;
 using UwpApp.ViewModel;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using Autofac;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -15,21 +17,18 @@ namespace UwpApp
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private MainViewModel viewModel;
+        private readonly IMainViewModel viewModel;
         public MainPage()
         {
             this.InitializeComponent();
+            viewModel = ConfigureServices.Container().Resolve<IMainViewModel>();
+            viewModel.LoadEntries();
         }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            if (viewModel == null)
-            {
-                viewModel = new MainViewModel((MbaApiClient)e.Parameter);
-            }
-            await viewModel.LoadEntries();
-        }
+        //protected override async void OnNavigatedTo(NavigationEventArgs e)
+        //{
+        //    base.OnNavigatedTo(e);
+        //}
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

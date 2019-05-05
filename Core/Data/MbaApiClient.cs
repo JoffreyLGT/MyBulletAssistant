@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Core.Data
 {
-    public class MbaApiClient
+    public class MbaApiClient : IDataProvider
     {
         private readonly Uri apiServerUri;
         private LoginModel credentials;

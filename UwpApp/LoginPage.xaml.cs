@@ -1,9 +1,11 @@
-﻿using Core.Models;
+﻿using Autofac;
+using Core.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using UwpApp.Startup;
 using UwpApp.ViewModel;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -24,12 +26,12 @@ namespace UwpApp
     /// </summary>
     public sealed partial class LoginPage : Page
     {
-        public LoginViewModel ViewModel { get; }
+        public ILoginViewModel ViewModel { get; }
 
         public LoginPage()
         {
             this.InitializeComponent();
-            ViewModel = new LoginViewModel();
+            ViewModel = ConfigureServices.Container().Resolve<ILoginViewModel>();
         }
     }
 }

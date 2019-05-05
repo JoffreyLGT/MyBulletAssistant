@@ -29,7 +29,7 @@
             </Grid.ColumnDefinitions>
             <Image 
                 Grid.Column="0"
-                Source="Images/login-icon.png" 
+                Source="Images/logo.png" 
                 Width="70" Height="70" />
             <TextBlock 
                 Grid.Column="1"

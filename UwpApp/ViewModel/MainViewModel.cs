@@ -7,14 +7,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using UwpApp.Base;
 using UwpApp.Models;
+using UwpApp.Startup;
 using Windows.Security.Credentials;
 using Windows.UI.Popups;
+using Autofac;
 
 namespace UwpApp.ViewModel
 {
-    public class MainViewModel : Observable
+    public class MainViewModel : Observable, IMainViewModel
     {
-        private readonly MbaApiClient client;
+        private readonly IDataProvider dataProvider;
         private ObservableCollection<GridEntry> entries;
         private ObservableCollection<GridEntry> originalEntries;
         private GridEntry selectedEntry;
@@ -73,14 +75,14 @@ namespace UwpApp.ViewModel
             }
         }
 
-        public MainViewModel(MbaApiClient client)
+        public MainViewModel()
         {
-            this.client = client;
+            this.dataProvider = ConfigureServices.Container().Resolve<IDataProvider>();
         }
 
         public async Task LoadEntries()
         {
-            (UserModel user, string error) = await client.GetUser(true);
+            (UserModel user, string error) = await dataProvider.GetUser(true);
             if (!string.IsNullOrEmpty(error))
             {
                 Debug.WriteLine("An error occured while fetching the user's entries.");
@@ -100,7 +102,7 @@ namespace UwpApp.ViewModel
         public async void UpdateEntry(object sender, EventArgs e)
         {
             var editedEntry = ((GridEntry)sender).ToEntryModel();
-            (_, string error) = await client.UpdateEntry(editedEntry.Id, editedEntry);
+            (_, string error) = await dataProvider.UpdateEntry(editedEntry.Id, editedEntry);
             if (string.IsNullOrEmpty(error))
             {
                 return;
@@ -112,7 +114,7 @@ namespace UwpApp.ViewModel
 
         public async void AddEntry()
         {
-            (var entry, var error) = await client.CreateEntry(new EntryModel { Journal = "New", Pages = "New", Title = "New" });
+            (var entry, var error) = await dataProvider.CreateEntry(new EntryModel { Journal = "New", Pages = "New", Title = "New" });
             if (!string.IsNullOrEmpty(error))
             {
                 Debug.WriteLine($"Error while trying to update the entry: {error}.");
@@ -130,7 +132,7 @@ namespace UwpApp.ViewModel
             {
                 return;
             }
-            (var isDeleted, var error) = await client.DeleteEntry(selectedEntry.Id);
+            (var isDeleted, var error) = await dataProvider.DeleteEntry(selectedEntry.Id);
             if (!isDeleted)
             {
                 Debug.WriteLine($"Error while trying to delete the entry: {error}");

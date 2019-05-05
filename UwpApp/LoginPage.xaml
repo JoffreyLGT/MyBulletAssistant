@@ -33,7 +33,7 @@
                 Orientation="Horizontal"
                 HorizontalAlignment="Center"
                 Margin="0 0 0 20">
-                <Image Source="Images/login-icon.png" 
+                <Image Source="Images/logo.png" 
                     Width="70" Height="70"
                     Margin="5"/>
                 <TextBlock 

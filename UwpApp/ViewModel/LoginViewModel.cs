@@ -6,13 +6,15 @@ using UwpApp.Base;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.Security.Credentials;
+using UwpApp.Startup;
+using Autofac;
 
 namespace UwpApp.ViewModel
 {
-    public class LoginViewModel : Observable
+    public class LoginViewModel : Observable, ILoginViewModel
     {
 
-        private readonly MbaApiClient client;
+        private readonly IDataProvider client;
         private string email;
         public string Email
         {
@@ -73,7 +75,7 @@ namespace UwpApp.ViewModel
 
         public LoginViewModel()
         {
-            client = new MbaApiClient(new Uri("http://localhost:58665/"));
+            client = ConfigureServices.Container().Resolve<IDataProvider>();
 
             var loginCredential = GetCredentialFromLocker();
             if (loginCredential != null)
