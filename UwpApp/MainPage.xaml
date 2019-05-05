@@ -105,7 +105,7 @@
                 VerticalAlignment="Stretch"
                 AutoGenerateColumns="False"
                 CanUserSortColumns="True"
-                ItemsSource="{x:Bind viewModel.Entries, Mode=OneWay}" SelectionChanged="DataGrid_SelectionChanged">
+                ItemsSource="{x:Bind viewModel.Entries, Mode=TwoWay}" SelectionChanged="DataGrid_SelectionChanged">
                 <controls:DataGrid.Columns>
                     <controls:DataGridTextColumn 
                         Header="Journal" 

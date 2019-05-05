@@ -129,7 +129,7 @@ namespace UwpApp.ViewModel
                 "My Bullet Assistant", email, password));
 
             Frame rootFrame = Window.Current.Content as Frame;
-            rootFrame.Navigate(typeof(MainPage), client);
+            rootFrame.Navigate(typeof(MainPage));
         }
     }
 }

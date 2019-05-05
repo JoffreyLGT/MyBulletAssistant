@@ -7,6 +7,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using Autofac;
+using System.Threading.Tasks;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -22,13 +23,9 @@ namespace UwpApp
         {
             this.InitializeComponent();
             viewModel = ConfigureServices.Container().Resolve<IMainViewModel>();
-            viewModel.LoadEntries();
-        }
 
-        //protected override async void OnNavigatedTo(NavigationEventArgs e)
-        //{
-        //    base.OnNavigatedTo(e);
-        //}
+            Loaded += async (sender, arguments) => await viewModel.LoadEntries();
+        }
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

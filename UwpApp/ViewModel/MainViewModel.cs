@@ -11,6 +11,8 @@ using UwpApp.Startup;
 using Windows.Security.Credentials;
 using Windows.UI.Popups;
 using Autofac;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace UwpApp.ViewModel
 {
@@ -32,9 +34,7 @@ namespace UwpApp.ViewModel
                 OnPropertyChanged();
             }
         }
-
-
-
+               
         public string FilterValue
         {
             get => filterValue;
@@ -161,7 +161,9 @@ namespace UwpApp.ViewModel
         {
             var vault = new PasswordVault();
             vault.Remove(vault.FindAllByResource("My Bullet Assistant")[0]);
-            Environment.Exit(0);
+            
+            Frame rootFrame = Window.Current.Content as Frame;
+            rootFrame.Navigate(typeof(LoginPage));
         }
     }
 }

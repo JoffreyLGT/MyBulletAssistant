@@ -1,6 +1,9 @@
-﻿namespace UwpApp.ViewModel
+﻿using System.ComponentModel;
+using UwpApp.Base;
+
+namespace UwpApp.ViewModel
 {
-    public interface ILoginViewModel
+    public interface ILoginViewModel : INotifyPropertyChanged
     {
         string Email { get; set; }
         bool HasAuthenticationFailed { get; set; }

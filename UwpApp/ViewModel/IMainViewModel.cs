@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Threading.Tasks;
+using UwpApp.Base;
 using UwpApp.Models;
 
 namespace UwpApp.ViewModel
 {
-    public interface IMainViewModel
+    public interface IMainViewModel : INotifyPropertyChanged
     {
         ObservableCollection<GridEntry> Entries { get; set; }
         string FilterValue { get; set; }
