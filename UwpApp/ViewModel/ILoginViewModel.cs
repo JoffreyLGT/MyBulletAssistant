@@ -10,6 +10,7 @@ namespace UwpApp.ViewModel
         bool InvalidEmail { get; set; }
         bool InvalidPassword { get; set; }
         string Password { get; set; }
+        bool IsLoading { get; set; }
 
         void Login();
     }

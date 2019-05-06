@@ -73,6 +73,19 @@ namespace UwpApp.ViewModel
             }
         }
 
+        private bool isLoading;
+
+        public bool IsLoading
+        {
+            get { return isLoading; }
+            set
+            {
+                isLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         public LoginViewModel()
         {
             client = ConfigureServices.Container().Resolve<IDataProvider>();
@@ -107,6 +120,7 @@ namespace UwpApp.ViewModel
 
         public async void Login()
         {
+            IsLoading = true;
             // Check the user inputs
             InvalidEmail = string.IsNullOrWhiteSpace(email) || !Regex.IsMatch(email, @"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*");
             InvalidPassword = string.IsNullOrWhiteSpace(password) || !Regex.IsMatch(password, @"((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\w]).{6,20})");
@@ -121,6 +135,7 @@ namespace UwpApp.ViewModel
             {
                 // Fail, inform the user.
                 HasAuthenticationFailed = true;
+                IsLoading = false;
                 return;
             }
 

@@ -55,9 +55,31 @@
             <TextBlock Text="{StaticResource loginPage_wrongCredentials}" 
                        Visibility="{x:Bind ViewModel.HasAuthenticationFailed, Mode=OneWay}" FontFamily="Segoe UI"
                   Foreground="Red"               HorizontalAlignment="Center"/>
-            
-        </StackPanel>
-        
 
+        </StackPanel>
+        <Grid
+            Grid.RowSpan="3"
+            Grid.ColumnSpan="3"
+            Background="#4C000000"
+            Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <ProgressRing 
+                IsActive="true" 
+                Width="100"
+                Height="100"
+                Grid.Row="1"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                />
+        </Grid>
     </Grid>
 </Page>
