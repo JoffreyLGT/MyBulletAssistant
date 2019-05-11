@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Core.Models
 {
-    public class EntryModel
+    public class EntryModel : IEntryModel
     {
         public int Id { get; set; }
         public string Journal { get; set; }
